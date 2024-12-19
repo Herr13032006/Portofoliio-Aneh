@@ -1,20 +1,28 @@
-const header = document.querySelector("header");
-const menu = document.querySelector("#menu-icon");
-const navlist = document.querySelector(".navlist");
+let lastScrollTop = 0; 
+const header = document.querySelector('header'); 
 
-// Toggle menu visibility on small screens
-menu.addEventListener("click", () => {
-    menu.classList.toggle("bx-x");
-    navlist.classList.toggle("active");
-});
+// Debounce function to limit the number of scroll events
+function debounce(func, delay) {
+    let timer;
+    return function() {
+        clearTimeout(timer);
+        timer = setTimeout(func, delay);
+    };
+}
 
-// Sticky header on scroll
-window.addEventListener("scroll", () => {
-    header.classList.toggle("sticky", window.scrollY > 120);
+function handleScroll() {
+    let currentScroll = window.scrollY || document.documentElement.scrollTop; 
 
-    // Close menu on scroll
-    if (window.scrollY > 0) {
-        menu.classList.remove("bx-x");
-        navlist.classList.remove("active");
+    if (currentScroll > lastScrollTop) {
+        
+        header.classList.add('hidden'); 
+    } else {
+       
+        header.classList.remove('hidden'); 
     }
-});
+    
+    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; 
+}
+
+
+window.addEventListener('scroll', debounce(handleScroll, 20)); 
